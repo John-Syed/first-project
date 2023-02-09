@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This template creates basic Infrastructure
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - qa
+      - prod
+  VpcEx:
+    Type: String
+    Description: VpcId
+    Default: vpc-02c1964a97a4b2b1d
+  Subnet1:
+    Type: String
+    Description: Subnet1
+    Default: subnet-055586feccf5ee3d1
+  Subnet2:
+    Type: String
+    Description: Subnet1
+    Default: subnet-002bc7536d0651ba3 
+  SecurityGroup:
+    Type: String
+    Description: sg for stack
+    Default: sg-085b328f51b875922
+Resources:
+  
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0aa7d40eeae50c9a9
+      InstanceType: t2.micro
+      KeyName: ubuntujp
+      NetworkInterfaces :
+        -  AssociatePublicIpAddress : true
+           DeviceIndex : 0
+           DeleteOnTermination : true
+           SubnetId :  
+              Ref : Subnet1
+                   
+           GroupSet : 
+             - sg-085b328f51b875922
+      UserData :
+        Fn::Base64: !Sub |
+            #!/bin/bash -xe
+            sudo yum update -y
+            sudo amazon-linux-extras install nginx1 -y
+            sudo systemctl start nginx
+            sudo systemctl enable nginx
+
+Outputs:
+  VPCId:
+    Description: Vpc of the Default VPC
+    Value:
+      Ref: VpcEx
+
+  Subnet1:
+    Description: Id of subnet
+    Value:
+      Ref: Subnet1
+
+  Subnet2:
+    Description: id of subnet
+    Value:
+      Ref: Subnet2
