@@ -185,5 +185,9 @@ Outputs :
         Description : id of subnet
         Value : 
             Ref : Subnet1
+    Instance : 
+        Description : id of instance
+        Value :
+            Ref : PrivateWebServer
             
 
